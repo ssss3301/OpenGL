@@ -5,7 +5,7 @@
 
 class Triangle : public GLBase {
 public:
-	Triangle() : shader_prog(0), vao(0), vbo(0) {
+	Triangle() : shader_prog(0), vao(0), vbo(0), ebo(0) {
 
 	}
 	virtual void before_render();
@@ -15,6 +15,7 @@ public:
 private:
 	unsigned int vao;
 	unsigned int vbo;
+	unsigned int ebo;
 	unsigned int shader_prog;
 };
 
