@@ -31,9 +31,18 @@ void GLBase::render() {
 	before_render();
 	while (!glfwWindowShouldClose(_window)) {
 		process_input(_window);
+
+		if (_use_wireframe_mode) {
+			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		}
+		else {
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		}
+
 		before_draw_scene();
 		draw_scene();
 		after_draw_scene();
+
 		glfwSwapBuffers(_window);
 		glfwPollEvents();
 	}
@@ -165,4 +174,8 @@ void GLBase::before_draw_scene() {
 
 void GLBase::after_draw_scene() {
 
+}
+
+void GLBase::use_wireframe_mode(bool use) {
+	_use_wireframe_mode = use;
 }

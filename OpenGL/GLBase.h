@@ -13,7 +13,7 @@ typedef struct shader_info {
 
 class GLBase {
 public:
-	GLBase() : _window(nullptr) {}
+	GLBase() : _window(nullptr), _use_wireframe_mode(false) {}
 	virtual ~GLBase() {}
 public:
 	virtual bool init_gl_environment();
@@ -29,6 +29,7 @@ public:
 	virtual void after_draw_scene();
 
 	void set_framebuffer_size_callback(GLFWframebuffersizefun callback);
+	void use_wireframe_mode(bool use);
 
 private:
 	unsigned int compile_shader(const std::string& shader_file, int shader_type);
@@ -38,6 +39,7 @@ private:
 
 private:
 	GLFWwindow* _window;
+	bool		_use_wireframe_mode;
 };
 
 
