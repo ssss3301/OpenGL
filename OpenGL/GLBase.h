@@ -17,7 +17,7 @@ public:
 	virtual ~GLBase() {}
 public:
 	virtual bool init_gl_environment();
-	virtual bool create_window(int width, int heigt, std::string& title, GLFWmonitor* monitor, GLFWwindow* share);
+	virtual bool create_window(int width, int height, std::string& title, GLFWmonitor* monitor, GLFWwindow* share);
 	virtual void render();
 	virtual void draw_scene();
 	virtual void process_input(GLFWwindow* window);
@@ -40,6 +40,10 @@ private:
 private:
 	GLFWwindow* _window;
 	bool		_use_wireframe_mode;
+
+protected:
+	int			_screen_width;
+	int			_screen_height;
 };
 
 

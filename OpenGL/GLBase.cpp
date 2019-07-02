@@ -12,8 +12,8 @@ bool GLBase::init_gl_environment() {
 	return true;
 }
 
-bool GLBase::create_window(int width, int heigt, std::string& title, GLFWmonitor* monitor, GLFWwindow* share) {
-	_window = glfwCreateWindow(width, heigt, title.c_str(), monitor, share);
+bool GLBase::create_window(int width, int height, std::string& title, GLFWmonitor* monitor, GLFWwindow* share) {
+	_window = glfwCreateWindow(width, height, title.c_str(), monitor, share);
 	if (!_window) {
 		glfwTerminate();
 		return false;
@@ -22,7 +22,10 @@ bool GLBase::create_window(int width, int heigt, std::string& title, GLFWmonitor
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
 		return false;
 	}
-	glViewport(0, 0, width, heigt);
+	glViewport(0, 0, width, height);
+
+	_screen_width = width;
+	_screen_height = height;
 
 	return true;
 }
