@@ -39,6 +39,12 @@
     <ClCompile Include="Enter3D.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="AroundCamera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FreeMoveCamera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GLBase.h">
@@ -57,6 +63,12 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="Enter3D.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AroundCamera.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FreeMoveCamera.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

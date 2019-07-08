@@ -19,7 +19,7 @@ public:
 	virtual void after_render();
 	virtual void draw_scene();
 
-private:
+protected:
 	unsigned int vao;
 	unsigned int vbo;
 	unsigned int ebo;

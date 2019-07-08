@@ -159,7 +159,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\glad\src\glad.c" />
+    <ClCompile Include="AroundCamera.cpp" />
     <ClCompile Include="Enter3D.cpp" />
+    <ClCompile Include="FreeMoveCamera.cpp" />
     <ClCompile Include="GLBase.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="stb_image.cpp" />
@@ -168,7 +170,9 @@
     <ClCompile Include="Triangle.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AroundCamera.h" />
     <ClInclude Include="Enter3D.h" />
+    <ClInclude Include="FreeMoveCamera.h" />
     <ClInclude Include="GLBase.h" />
     <ClInclude Include="stb_image.h" />
     <ClInclude Include="Texture.h" />
