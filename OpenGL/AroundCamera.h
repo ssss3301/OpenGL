@@ -10,7 +10,7 @@ public:
 	virtual ~AroundCamera() {}
 
 public:
-	virtual void draw_scene();
+	virtual void render();
 };
 
 

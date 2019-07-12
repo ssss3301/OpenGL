@@ -3,7 +3,19 @@
 
 #define USE_INDEX_ELEMENT
 
-void Triangle::before_render() {
+bool Triangle::init(int width, int height, std::string& title, GLFWmonitor* monitor, GLFWwindow* share) {
+	if (!GLApplication::init(width, height, title, monitor, share)) {
+		return false;
+	}
+
+	setup_vao();
+	load_shaders();
+
+	return true;
+}
+
+
+void Triangle::setup_vao() {
 	float vertices[] = {
 	-0.5f, -0.5f, 0.0f,
 	 0.5f, -0.5f, 0.0f,
@@ -31,13 +43,17 @@ void Triangle::before_render() {
 
 	glBindVertexArray(0);
 
-	shader_info info;
-	info.vertex_shader = "shaders/triangle.vert";
-	info.fragment_shader = "shaders/triangle.frag";
-	shader_prog = load_shader(info);
 }
 
-void Triangle::after_render() {
+void Triangle::load_shaders() {
+	shader_file_info info;
+	info.vertex_shader = "shaders/triangle.vert";
+	info.fragment_shader = "shaders/triangle.frag";
+	shader_prog = load_shader_from_file(info);
+}
+
+
+void Triangle::cleanup() {
 	if (vbo != 0) {
 		glDeleteBuffers(1, &vbo);
 	}
@@ -56,7 +72,7 @@ void Triangle::after_render() {
 }
 
 
-void Triangle::draw_scene() {
+void Triangle::render() {
 	if (shader_prog == 0) {
 		return;
 	}

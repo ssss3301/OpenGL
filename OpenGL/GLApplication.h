@@ -5,34 +5,44 @@
 #include <glfw3.h>
 
 #include <string>
+#include "Event.h"
 
-typedef struct shader_info {
+typedef struct shader_file_info {
 	std::string vertex_shader;
 	std::string fragment_shader;
 };
 
-class GLBase {
+class GLApplication {
 public:
-	GLBase() : _window(nullptr), _use_wireframe_mode(false) {}
-	virtual ~GLBase() {}
+	GLApplication() : _window(nullptr), _use_wireframe_mode(false) {}
+	virtual ~GLApplication() {}
+
 public:
 	virtual bool init_gl_environment();
-	virtual bool create_window(int width, int height, std::string& title, GLFWmonitor* monitor, GLFWwindow* share);
+	virtual bool init(int width, int height, std::string& title, GLFWmonitor* monitor, GLFWwindow* share);
+	virtual void runLoop();
+
 	virtual void render();
-	virtual void draw_scene();
-	virtual void process_input(GLFWwindow* window);
-	virtual void exit();
-	virtual unsigned int load_shader(const shader_info& shader);
 	virtual void before_render();
 	virtual void after_render();
-	virtual void before_draw_scene();
-	virtual void after_draw_scene();
+
+	virtual void handle_input(GLFWwindow* window);
+	virtual void handle_event(const Event& evt);
 
 	void set_framebuffer_size_callback(GLFWframebuffersizefun callback);
 	void use_wireframe_mode(bool use);
+	void set_input_mode(int mode, int value);
+	void set_mouse_callback(GLFWcursorposfun callback);
+	bool is_wireframe_mode() const;
+
+	unsigned int load_shader_from_file(const shader_file_info& shader);
+
+	virtual void cleanup();
+	virtual void exit();
 
 private:
 	unsigned int compile_shader(const std::string& shader_file, int shader_type);
+	void dispatch_event();
 
 private:
 	bool read_shader_source(char* source_buffer, int max_buffer_len, const std::string& shader_file);

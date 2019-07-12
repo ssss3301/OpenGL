@@ -1,9 +1,9 @@
 #ifndef __Enter3D_H__
 #define __Enter3D_H__
 
-#include "GLBase.h"
+#include "GLApplication.h"
 
-class Enter3D : public GLBase {
+class Enter3D : public GLApplication {
 public:
 	Enter3D() { 
 		vao = 0;
@@ -15,9 +15,14 @@ public:
 		matProjLocation = -1;
 		tex = 0;
 	}
-	virtual void before_render();
-	virtual void after_render();
-	virtual void draw_scene();
+	virtual bool init(int width, int height, std::string& title, GLFWmonitor* monitor, GLFWwindow* share);
+	virtual void cleanup();
+	virtual void render();
+
+private:
+	void setup_vao();
+	void load_textures();
+	void load_shaders();
 
 protected:
 	unsigned int vao;

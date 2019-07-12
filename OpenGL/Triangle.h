@@ -1,16 +1,20 @@
 #ifndef __Triangle_H__
 #define __Triangle_H__
 
-#include "GLBase.h"
+#include "GLApplication.h"
 
-class Triangle : public GLBase {
+class Triangle : public GLApplication {
 public:
 	Triangle() : shader_prog(0), vao(0), vbo(0), ebo(0) {
 
 	}
-	virtual void before_render();
- 	virtual void draw_scene();
-	virtual void after_render();
+	virtual bool init(int width, int height, std::string& title, GLFWmonitor* monitor, GLFWwindow* share);
+ 	virtual void render();
+	virtual void cleanup();
+
+private:
+	void setup_vao();
+	void load_shaders();
 
 private:
 	unsigned int vao;

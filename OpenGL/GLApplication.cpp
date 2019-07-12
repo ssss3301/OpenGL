@@ -1,7 +1,7 @@
-#include "GLBase.h"
+#include "GLApplication.h"
 #include <iostream>
 
-bool GLBase::init_gl_environment() {
+bool GLApplication::init_gl_environment() {
 	if (!glfwInit()) {
 		return false;
 	}
@@ -12,7 +12,11 @@ bool GLBase::init_gl_environment() {
 	return true;
 }
 
-bool GLBase::create_window(int width, int height, std::string& title, GLFWmonitor* monitor, GLFWwindow* share) {
+bool GLApplication::init(int width, int height, std::string& title, GLFWmonitor* monitor, GLFWwindow* share) {
+	if (!init_gl_environment()) {
+		return false;
+	}
+
 	_window = glfwCreateWindow(width, height, title.c_str(), monitor, share);
 	if (!_window) {
 		glfwTerminate();
@@ -22,57 +26,53 @@ bool GLBase::create_window(int width, int height, std::string& title, GLFWmonito
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
 		return false;
 	}
-	glViewport(0, 0, width, height);
-
 	_screen_width = width;
 	_screen_height = height;
 
 	return true;
 }
 
-void GLBase::render() {
-	before_render();
+void GLApplication::runLoop() {
 	while (!glfwWindowShouldClose(_window)) {
-		process_input(_window);
-
-		if (_use_wireframe_mode) {
-			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		}
-		else {
-			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		}
-
-		before_draw_scene();
-		draw_scene();
-		after_draw_scene();
-
+		handle_input(_window);
+		dispatch_event();
+		before_render();
+		render();
+		after_render();
 		glfwSwapBuffers(_window);
 		glfwPollEvents();
 	}
-	after_render();
 }
 
-void GLBase::draw_scene() {
+void GLApplication::render() {
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 }
 
-void GLBase::set_framebuffer_size_callback(GLFWframebuffersizefun callback) {
+void GLApplication::set_framebuffer_size_callback(GLFWframebuffersizefun callback) {
 	if (_window) {
 		glfwSetFramebufferSizeCallback(_window, callback);
 	}
 }
 
-void GLBase::process_input(GLFWwindow* window) {
+void GLApplication::handle_input(GLFWwindow* window) {
 	if (glfwGetKey(_window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(_window, true);
 }
 
-void GLBase::exit(){
+void GLApplication::dispatch_event() {
+	Event evt;
+	if (EventManager::GetInstance()->pollEvent(evt)) {
+		handle_event(evt);
+	}
+}
+
+void GLApplication::exit(){
+	cleanup();
 	glfwTerminate();
 }
 
-unsigned int GLBase::load_shader(const shader_info& shader) {
+unsigned int GLApplication::load_shader_from_file(const shader_file_info& shader) {
 	unsigned int prog = glCreateProgram();
 	if (prog == 0)
 		return 0;
@@ -105,7 +105,7 @@ unsigned int GLBase::load_shader(const shader_info& shader) {
 	return prog;
 }
 
-unsigned int GLBase::compile_shader(const std::string& shader_file, int shader_type) {
+unsigned int GLApplication::compile_shader(const std::string& shader_file, int shader_type) {
 	char source_buffer[1024] = { 0 };
 	if (!read_shader_source(source_buffer, 1024, shader_file)) {
 		return 0;
@@ -137,7 +137,7 @@ unsigned int GLBase::compile_shader(const std::string& shader_file, int shader_t
 	return shader;
 }
 
-bool GLBase::read_shader_source(char* source_buffer, int max_buffer_len, const std::string& shader_file) {
+bool GLApplication::read_shader_source(char* source_buffer, int max_buffer_len, const std::string& shader_file) {
 	FILE* file = fopen(shader_file.c_str(), "r+");
 	if (file == nullptr) {
 		return false;
@@ -163,22 +163,45 @@ bool GLBase::read_shader_source(char* source_buffer, int max_buffer_len, const s
 	return true;
 }
 
-void GLBase::before_render() {
+void GLApplication::before_render() {
 
 }
 
-void GLBase::after_render() {
+void GLApplication::after_render() {
 
 }
 
-void GLBase::before_draw_scene() {
 
-}
-
-void GLBase::after_draw_scene() {
-
-}
-
-void GLBase::use_wireframe_mode(bool use) {
+void GLApplication::use_wireframe_mode(bool use) {
 	_use_wireframe_mode = use;
+	if (_use_wireframe_mode) {
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	}
+	else {
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	}
+}
+
+void GLApplication::set_input_mode(int mode, int value){
+	if (_window) {
+		glfwSetInputMode(_window, mode, value);
+	}
+}
+
+void GLApplication::set_mouse_callback(GLFWcursorposfun callback) {
+	if (_window) {
+		glfwSetCursorPosCallback(_window, callback);
+	}
+}
+
+bool GLApplication::is_wireframe_mode() const {
+	return _use_wireframe_mode;
+}
+
+void GLApplication::cleanup() {
+
+}
+
+void GLApplication::handle_event(const Event& evt) {
+
 }

@@ -5,59 +5,17 @@
 #include "glm/ext/matrix_clip_space.hpp"
 #include "glm/gtc/type_ptr.hpp"
 
-void Enter3D::before_render() {
-	float vertices[] = {
-		//     ---- 位置 ----       ---- 颜色 ----     - 纹理坐标 -
-			 0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,   // 右上
-			 0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,   // 右下
-			-0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // 左下
-			-0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f    // 左上
-	};
-	unsigned int indices[] = {
-		3, 2, 1, 1, 3, 0
-	};
-
-	glGenVertexArrays(1, &vao);
-	glBindVertexArray(vao);
-	glGenBuffers(1, &vbo);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(vertices[0]), (void*)0);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(vertices[0]), (void*)(6 * sizeof(vertices[0])));
-	glEnableVertexAttribArray(1);
-	glGenBuffers(1, &ebo);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-	glBindVertexArray(0);
-
-	int width, height, channel;
-	unsigned char* data = stbi_load("textures/wall.jpg", &width, &height, &channel, 0);
-	if (data != nullptr)
-	{
-		glGenTextures(1, &tex);
-		glBindTexture(GL_TEXTURE_2D, tex);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-		glGenerateMipmap(GL_TEXTURE_2D);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glBindTexture(GL_TEXTURE_2D, 0);
+bool Enter3D::init(int width, int height, std::string& title, GLFWmonitor* monitor, GLFWwindow* share) {
+	if (!GLApplication::init(width, height, title, monitor, share)) {
+		return false;
 	}
-	stbi_image_free(data);
-
-	shader_info shaders;
-	shaders.vertex_shader = "shaders/enter3d.vert";
-	shaders.fragment_shader = "shaders/enter3d.frag";
-	shader_prog = load_shader(shaders);
-
-	matModelLocation = glGetUniformLocation(shader_prog, "matModel");
-	matViewLocation = glGetUniformLocation(shader_prog, "matView");
-	matProjLocation = glGetUniformLocation(shader_prog, "matProj");
+	setup_vao();
+	load_textures();
+	load_shaders();
+	return true;
 }
 
-void Enter3D::after_render() {
+void Enter3D::cleanup() {
 	if (ebo != 0) {
 		glDeleteBuffers(1, &ebo);
 		ebo = 0;
@@ -84,7 +42,7 @@ void Enter3D::after_render() {
 	}
 }
 
-void Enter3D::draw_scene() {
+void Enter3D::render() {
 	if (!shader_prog)
 		return;
 
@@ -109,3 +67,61 @@ void Enter3D::draw_scene() {
 	glBindVertexArray(vao);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void*)0);
 }
+
+void Enter3D::setup_vao() {
+	float vertices[] = {
+		//     ---- 位置 ----       ---- 颜色 ----     - 纹理坐标 -
+			 0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,   // 右上
+			 0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,   // 右下
+			-0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // 左下
+			-0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f    // 左上
+	};
+	unsigned int indices[] = {
+		3, 2, 1, 1, 3, 0
+	};
+
+	glGenVertexArrays(1, &vao);
+	glBindVertexArray(vao);
+	glGenBuffers(1, &vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(vertices[0]), (void*)0);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(vertices[0]), (void*)(6 * sizeof(vertices[0])));
+	glEnableVertexAttribArray(1);
+	glGenBuffers(1, &ebo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+	glBindVertexArray(0);
+}
+
+void Enter3D::load_textures() {
+	int width, height, channel;
+	unsigned char* data = stbi_load("textures/wall.jpg", &width, &height, &channel, 0);
+	if (data != nullptr)
+	{
+		glGenTextures(1, &tex);
+		glBindTexture(GL_TEXTURE_2D, tex);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glBindTexture(GL_TEXTURE_2D, 0);
+	}
+	stbi_image_free(data);
+}
+
+void Enter3D::load_shaders() {
+	shader_file_info shaders;
+	shaders.vertex_shader = "shaders/enter3d.vert";
+	shaders.fragment_shader = "shaders/enter3d.frag";
+	shader_prog = load_shader_from_file(shaders);
+
+	matModelLocation = glGetUniformLocation(shader_prog, "matModel");
+	matViewLocation = glGetUniformLocation(shader_prog, "matView");
+	matProjLocation = glGetUniformLocation(shader_prog, "matProj");
+
+}
+
