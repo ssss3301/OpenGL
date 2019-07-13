@@ -8,14 +8,27 @@ class FreeMoveCamera : public Enter3D
 {
 public:
 	FreeMoveCamera();
-	virtual void draw_scene();
-	virtual void process_input(GLFWwindow* window);
+	virtual bool init(int width, int height, std::string& title, GLFWmonitor* monitor, GLFWwindow* share);
+	virtual void render();
+	virtual void handle_input(GLFWwindow* window);
+	virtual void handle_event(const Event& evt);
+
+private:
+	void on_size_changed(int width, int height);
+	void on_mouse_moved(double xpos, double ypos);
 
 private:
 	float _last_time;
 	glm::vec3 camera_pos;
 	glm::vec3 direction;
 	glm::vec3 up;
+
+	double _lastx;
+	double _lasty;
+	float _pitch;
+	float _yaw;
+
+	bool firstMouse;
 };
 
 #endif//__FreeMoveCamera_H__

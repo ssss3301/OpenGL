@@ -4,7 +4,7 @@
 #include "glm/ext/matrix_clip_space.hpp"
 #include "glm/gtc/type_ptr.hpp"
 
-void AroundCamera::draw_scene() {
+void AroundCamera::render() {
 	if (!shader_prog)
 		return;
 

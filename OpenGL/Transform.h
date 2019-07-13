@@ -1,9 +1,9 @@
 #ifndef __Transform_H__
 #define __Transform_H__
 
-#include "GLBase.h"
+#include "GLApplication.h"
 
-class Transform : public GLBase {
+class Transform : public GLApplication {
 public:
 	Transform() {
 		vao = 0;
@@ -14,9 +14,14 @@ public:
 		transform_mat_location = -1;
 		shader_prog = 0;
 	}
-	virtual void before_render();
-	virtual void after_render();
-	virtual void draw_scene();
+	virtual bool init(int width, int height, std::string& title, GLFWmonitor* monitor, GLFWwindow* share);
+	virtual void render();
+	virtual void cleanup();
+
+private:
+	void setup_vao();
+	void load_textures();
+	void load_shaders();
 
 private:
 	unsigned int vao;

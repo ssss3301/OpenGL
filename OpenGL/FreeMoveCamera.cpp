@@ -2,6 +2,7 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/ext/matrix_clip_space.hpp"
 #include "glm/gtc/type_ptr.hpp"
+#include <iostream>
 
 FreeMoveCamera::FreeMoveCamera() {
 	_last_time = glfwGetTime();
@@ -10,7 +11,7 @@ FreeMoveCamera::FreeMoveCamera() {
 	up = glm::vec3(0.0, 1.0, 0.0);
 }
 
-void FreeMoveCamera::draw_scene() {
+void FreeMoveCamera::render() {
 	if (!shader_prog)
 		return;
 
@@ -37,7 +38,7 @@ void FreeMoveCamera::draw_scene() {
 
 }
 
-void FreeMoveCamera::process_input(GLFWwindow* window) {
+void FreeMoveCamera::handle_input(GLFWwindow* window) {
 	float current_time = glfwGetTime();
 	float delta_time = current_time - _last_time;
 	float camera_speed = 0.25 * delta_time;
@@ -55,4 +56,80 @@ void FreeMoveCamera::process_input(GLFWwindow* window) {
 	}
 
 	_last_time = current_time;
+
+	Enter3D::handle_input(window);
 }
+
+bool FreeMoveCamera::init(int width, int height, std::string& title, GLFWmonitor* monitor, GLFWwindow* share) {
+	if (!Enter3D::init(width, height, title, monitor, share)) {
+		return false;
+	}
+	set_input_mode(GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	_lastx = width / 2.0f;
+	_lasty = height / 2.0f;
+	_pitch = 0.0f;
+	_yaw = -90.0f;
+	firstMouse = true;
+
+	return true;
+}
+
+void FreeMoveCamera::handle_event(const Event& evt) {
+	switch (evt._type)
+	{
+	case Event::Resized:
+		on_size_changed(evt._size.width, evt._size.height);
+		break;
+
+	case Event::MouseMoved:
+		on_mouse_moved(evt._mousemove.xpos, evt._mousemove.ypos);
+		break;
+
+	default:
+		break;
+	}
+}
+
+void FreeMoveCamera::on_size_changed(int width, int height) {
+	glViewport(0, 0, width, height);
+	_screen_width = width;
+	_screen_height = height;
+}
+
+void FreeMoveCamera::on_mouse_moved(double xpos, double ypos) {
+	if (firstMouse)
+	{
+		_lastx = xpos;
+		_lasty = ypos;
+		firstMouse = false;
+	}
+
+	float offset_x = xpos - _lastx;
+	float offset_y = ypos - _lasty;
+
+	float sensitivity = 0.05f;
+	offset_x *= sensitivity;
+	offset_y *= sensitivity;
+
+	_pitch += offset_y;
+	_yaw += offset_x;
+
+	if (_pitch > 89.0f)
+		_pitch = 89.0f;
+	if (_pitch < -89.0f)
+		_pitch = -89.0f;
+
+
+	glm::vec3 front;
+	front.x = cos(glm::radians(_yaw)) * cos(glm::radians(_pitch));
+	front.y = sin(glm::radians(_pitch));
+	front.z = sin(glm::radians(_yaw)) * cos(glm::radians(_pitch));
+	direction = glm::normalize(front);
+
+	std::cout << direction.x << " " << direction.y << " " << direction.z << std::endl;
+
+	_lastx = xpos;
+	_lasty = ypos;
+
+}
+

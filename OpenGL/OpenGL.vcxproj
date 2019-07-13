@@ -161,8 +161,9 @@
     <ClCompile Include="..\..\..\glad\src\glad.c" />
     <ClCompile Include="AroundCamera.cpp" />
     <ClCompile Include="Enter3D.cpp" />
+    <ClCompile Include="Event.cpp" />
     <ClCompile Include="FreeMoveCamera.cpp" />
-    <ClCompile Include="GLBase.cpp" />
+    <ClCompile Include="GLApplication.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="stb_image.cpp" />
     <ClCompile Include="Texture.cpp" />
@@ -172,8 +173,9 @@
   <ItemGroup>
     <ClInclude Include="AroundCamera.h" />
     <ClInclude Include="Enter3D.h" />
+    <ClInclude Include="Event.h" />
     <ClInclude Include="FreeMoveCamera.h" />
-    <ClInclude Include="GLBase.h" />
+    <ClInclude Include="GLApplication.h" />
     <ClInclude Include="stb_image.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Transform.h" />

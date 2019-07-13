@@ -5,7 +5,18 @@
 #include "glm/gtc/type_ptr.hpp"
 #include <iostream>
 
-void Transform::before_render() {
+bool Transform::init(int width, int height, std::string& title, GLFWmonitor* monitor, GLFWwindow* share) {
+	if (!GLApplication::init(width, height, title, monitor, share)) {
+		return false;
+	}
+	setup_vao();
+	load_textures();
+	load_shaders();
+
+	return true;
+}
+
+void Transform::setup_vao() {
 	float vertices[] = {
 		//     ---- 位置 ----       ---- 颜色 ----     - 纹理坐标 -
 			 0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,   // 右上
@@ -32,7 +43,9 @@ void Transform::before_render() {
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
 	glBindVertexArray(0);
+}
 
+void Transform::load_textures() {
 	glGenTextures(1, &tex);
 	glBindTexture(GL_TEXTURE_2D, tex);
 	int width, height, channel;
@@ -49,16 +62,18 @@ void Transform::before_render() {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 	glBindTexture(GL_TEXTURE_2D, 0);
+}
 
-	shader_info shaders;
+void Transform::load_shaders() {
+	shader_file_info shaders;
 	shaders.vertex_shader = "shaders/transform.vert";
 	shaders.fragment_shader = "shaders/transform.frag";
-	shader_prog = load_shader(shaders);
+	shader_prog = load_shader_from_file(shaders);
 	tex_location = glGetUniformLocation(shader_prog, "tex");
 	transform_mat_location = glGetUniformLocation(shader_prog, "trans_mat");
 }
 
-void Transform::after_render() {
+void Transform::cleanup() {
 	if (ebo != 0) {
 		glDeleteBuffers(1, &ebo);
 		ebo = 0;
@@ -85,7 +100,7 @@ void Transform::after_render() {
 	}
 }
 
-void Transform::draw_scene() {
+void Transform::render() {
 	if (shader_prog == 0) {
 		return;
 	}

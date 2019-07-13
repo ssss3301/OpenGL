@@ -1,9 +1,9 @@
 #ifndef __Texture_H__
 #define __Texture_H__
 
-#include "GLBase.h"
+#include "GLApplication.h"
 
-class Texture : public GLBase {
+class Texture : public GLApplication {
 public:
 	Texture() {
 		vao = 0;
@@ -12,9 +12,14 @@ public:
 		tex = 0;
 		prog = 0;
 	}
-	virtual void before_render();
-	virtual void draw_scene();
-	virtual void after_render();
+	virtual bool init(int width, int height, std::string& title, GLFWmonitor* monitor, GLFWwindow* share);
+	virtual void render();
+	virtual void cleanup();
+
+private:
+	void setup_vao();
+	void load_textures();
+	void load_shaders();
 
 private:
 	unsigned int vao;
