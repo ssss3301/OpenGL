@@ -338,3 +338,8 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+OpenGL/OpenGL.vcxproj
+OpenGL/OpenGL.vcxproj.filters
+OpenGL/glad.c
+*.vcxproj
+*.filters
