@@ -16,6 +16,7 @@ public:
 private:
 	void on_size_changed(int width, int height);
 	void on_mouse_moved(double xpos, double ypos);
+	void on_mouse_scroll(double xoffset, double yoffset);
 
 private:
 	float _last_time;
@@ -27,6 +28,7 @@ private:
 	double _lasty;
 	float _pitch;
 	float _yaw;
+	float _fov;
 
 	bool firstMouse;
 };

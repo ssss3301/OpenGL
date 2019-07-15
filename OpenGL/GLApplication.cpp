@@ -205,3 +205,9 @@ void GLApplication::cleanup() {
 void GLApplication::handle_event(const Event& evt) {
 
 }
+
+void GLApplication::set_mouse_scroll_callback(GLFWscrollfun callback) {
+	if (_window) {
+		glfwSetScrollCallback(_window, callback);
+	}
+}

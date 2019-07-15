@@ -16,25 +16,41 @@ void FreeMoveCamera::render() {
 		return;
 
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glEnable(GL_DEPTH_TEST);
 
-	glm::mat4 model(1.0f);
-	model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0, 0.0, 0.0));
-	glUniformMatrix4fv(matModelLocation, 1, GL_FALSE, glm::value_ptr(model));
-	glm::vec3 up(0.0f, 1.0f, 0.0f);
+	glm::vec3 cubePositions[] = {
+		glm::vec3(0.0f,  0.0f,  0.0f),
+		glm::vec3(2.0f,  5.0f, -15.0f),
+		glm::vec3(-1.5f, -2.2f, -2.5f),
+		glm::vec3(-3.8f, -2.0f, -12.3f),
+		glm::vec3(2.4f, -0.4f, -3.5f),
+		glm::vec3(-1.7f,  3.0f, -7.5f),
+		glm::vec3(1.3f, -2.0f, -2.5f),
+		glm::vec3(1.5f,  2.0f, -2.5f),
+		glm::vec3(1.5f,  0.2f, -1.5f),
+		glm::vec3(-1.3f,  1.0f, -1.5f)
+	};
 
 	glm::mat4 view = glm::lookAt(camera_pos, camera_pos + direction, up);
 	glUniformMatrix4fv(matViewLocation, 1, GL_FALSE, glm::value_ptr(view));
 
 	glm::mat4 proj(1.0f);
-	proj = glm::perspective(glm::radians(45.0f), _screen_width * 1.0f / _screen_height, 0.1f, 100.0f);
+	proj = glm::perspective(glm::radians(_fov), _screen_width * 1.0f / _screen_height, 0.1f, 100.0f);
 	glUniformMatrix4fv(matProjLocation, 1, GL_FALSE, glm::value_ptr(proj));
 
 	glUseProgram(shader_prog);
 	glActiveTexture(GL_TEXTURE0);//默认是激活的
 	glBindTexture(GL_TEXTURE_2D, tex);
 	glBindVertexArray(vao);
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void*)0);
+	for (int i = 0; i < 10; ++i) {
+		glm::mat4 model(1.0f);
+		model = glm::translate(model, cubePositions[i]);
+		float angle = 20.0f * i;
+		model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+		glUniformMatrix4fv(matModelLocation, 1, GL_FALSE, glm::value_ptr(model));
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+	}
 
 }
 
@@ -69,6 +85,7 @@ bool FreeMoveCamera::init(int width, int height, std::string& title, GLFWmonitor
 	_lasty = height / 2.0f;
 	_pitch = 0.0f;
 	_yaw = -90.0f;
+	_fov = 45.0f;
 	firstMouse = true;
 
 	return true;
@@ -85,7 +102,12 @@ void FreeMoveCamera::handle_event(const Event& evt) {
 		on_mouse_moved(evt._mousemove.xpos, evt._mousemove.ypos);
 		break;
 
+	case Event::MouseScroll:
+		on_mouse_scroll(evt._mousescroll.xoffset, evt._mousescroll.yoffset);
+		break;
+
 	default:
+		Enter3D::handle_event(evt);
 		break;
 	}
 }
@@ -105,7 +127,7 @@ void FreeMoveCamera::on_mouse_moved(double xpos, double ypos) {
 	}
 
 	float offset_x = xpos - _lastx;
-	float offset_y = ypos - _lasty;
+	float offset_y = _lasty - ypos;
 
 	float sensitivity = 0.05f;
 	offset_x *= sensitivity;
@@ -119,17 +141,26 @@ void FreeMoveCamera::on_mouse_moved(double xpos, double ypos) {
 	if (_pitch < -89.0f)
 		_pitch = -89.0f;
 
-
 	glm::vec3 front;
 	front.x = cos(glm::radians(_yaw)) * cos(glm::radians(_pitch));
 	front.y = sin(glm::radians(_pitch));
 	front.z = sin(glm::radians(_yaw)) * cos(glm::radians(_pitch));
 	direction = glm::normalize(front);
 
-	std::cout << direction.x << " " << direction.y << " " << direction.z << std::endl;
+	std::cout << _pitch << std::endl;
 
 	_lastx = xpos;
 	_lasty = ypos;
 
 }
 
+void FreeMoveCamera::on_mouse_scroll(double xoffset, double yoffset) {
+	if (_fov >= 1.0 && _fov <= 45.0f) {
+		_fov -= yoffset;
+	}
+
+	if (_fov < 1.0f)
+		_fov = 1.0f;
+	if (_fov > 45.0f)
+		_fov = 45.0f;
+}

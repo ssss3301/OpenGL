@@ -16,10 +16,16 @@ public:
 		double ypos;
 	};
 
+	struct MouseScrollEvent {
+		double xoffset;
+		double yoffset;
+	};
+
 	enum EventType
 	{
 		Resized,
-		MouseMoved
+		MouseMoved,
+		MouseScroll
 	};
 
 	EventType _type;
@@ -27,6 +33,7 @@ public:
 	{
 		SizeEvent _size;
 		MouseMoveEvent _mousemove;
+		MouseScrollEvent _mousescroll;
 	};
 };
 

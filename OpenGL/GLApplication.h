@@ -14,7 +14,10 @@ typedef struct shader_file_info {
 
 class GLApplication {
 public:
-	GLApplication() : _window(nullptr), _use_wireframe_mode(false) {}
+	GLApplication() : _window(nullptr), _use_wireframe_mode(false) 
+	{
+
+	}
 	virtual ~GLApplication() {}
 
 public:
@@ -29,16 +32,20 @@ public:
 	virtual void handle_input(GLFWwindow* window);
 	virtual void handle_event(const Event& evt);
 
-	void set_framebuffer_size_callback(GLFWframebuffersizefun callback);
+
 	void use_wireframe_mode(bool use);
 	void set_input_mode(int mode, int value);
-	void set_mouse_callback(GLFWcursorposfun callback);
 	bool is_wireframe_mode() const;
 
 	unsigned int load_shader_from_file(const shader_file_info& shader);
 
 	virtual void cleanup();
 	virtual void exit();
+
+public:
+	void set_framebuffer_size_callback(GLFWframebuffersizefun callback);
+	void set_mouse_callback(GLFWcursorposfun callback);
+	void set_mouse_scroll_callback(GLFWscrollfun callback);
 
 private:
 	unsigned int compile_shader(const std::string& shader_file, int shader_type);
@@ -47,11 +54,9 @@ private:
 private:
 	bool read_shader_source(char* source_buffer, int max_buffer_len, const std::string& shader_file);
 
-private:
+protected:
 	GLFWwindow* _window;
 	bool		_use_wireframe_mode;
-
-protected:
 	int			_screen_width;
 	int			_screen_height;
 };

@@ -23,12 +23,21 @@ void frame_size_change_callback(GLFWwindow* window, int width, int height) {
 	EventManager::GetInstance()->pushEvent(evt);
 }
 
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
+	Event evt;
+	evt._type = Event::MouseScroll;
+	evt._mousescroll.xoffset = xoffset;
+	evt._mousescroll.yoffset = yoffset;
+	EventManager::GetInstance()->pushEvent(evt);
+}
+
 int main(int argc, char** argv) {
 	std::string title = "LearnOpenGL";
 	GLApplication* app = new FreeMoveCamera();
 	if (app->init(800, 600, title, nullptr, nullptr)) {
 		app->set_framebuffer_size_callback(frame_size_change_callback);
 		app->set_mouse_callback(mouse_callback);
+		app->set_mouse_scroll_callback(scroll_callback);
 		app->runLoop();
 		app->exit();
 	}
