@@ -343,3 +343,5 @@ OpenGL/OpenGL.vcxproj.filters
 OpenGL/glad.c
 *.vcxproj
 *.filters
+OpenGL/OpenGL.vcxproj
+OpenGL/OpenGL.vcxproj.filters
