@@ -18,8 +18,7 @@ void main()
     vec3 reflect_light_direction = reflect(-light_direction, normalize(fNormal));
     vec3 view_direction = normalize(viewPos - fragWorldPos);
     float spec = pow(max(dot(reflect_light_direction, view_direction), 0.0), 128);
-    float spec_strength = 0.6f;
-    vec3 spec_color = spec_strength * spec * light_color;
+    vec3 spec_color = spec * light_color;
 
     gl_FragColor = vec4((ambient_color + diffuse_color + spec_color) * object_color, 1.0f);
 }

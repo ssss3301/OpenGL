@@ -13,11 +13,13 @@ public:
 	};
 
 public:
-	Camera(glm::vec3 camera_positon, glm::vec3 worldup, glm::vec3 front = glm::vec3(0.0, 0.0, -1.0f), float pitch = 0.0f, float yaw = -90.0f);
+	Camera(glm::vec3 camera_positon, glm::vec3 worldup = glm::vec3(0.0, 1.0, 0.0), glm::vec3 front = glm::vec3(0.0, 0.0, -1.0f), float pitch = 0.0f, float yaw = -90.0f);
 	Camera(float xpos, float ypos, float zpos, float x_worldup, float y_worldup, float z_worldup
 		, float front_x = 0.0f, float front_y = 0.0f, float front_z = -1.0f, float pitch = 0.0f, float yaw = -90.0f);
 
 	glm::mat4 get_view_matrix() const;
+	glm::vec3 position() const;
+
 	void set_max_zoom(float max_zoom);
 	void set_sensitivity(float sensitivity);
 	void set_movespeed(float speed);

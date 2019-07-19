@@ -164,14 +164,14 @@ void Shader::set_uniform2ui(const std::string& uniform_name, unsigned int v0, un
 void Shader::set_uniform2iv(const std::string& uniform_name, const int* v) {
 	int location = glGetUniformLocation(_shaderProg, uniform_name.c_str());
 	if (location >= 0) {
-		glUniform2iv(_shaderProg, 2, v);
+		glUniform2iv(_shaderProg, 1, v);
 	}
 }
 
 void Shader::set_uniform2uiv(const std::string& uniform_name, const unsigned int* v) {
 	int location = glGetUniformLocation(_shaderProg, uniform_name.c_str());
 	if (location >= 0) {
-		glUniform2uiv(location, 2, v);
+		glUniform2uiv(location, 1, v);
 	}
 }
 
@@ -185,7 +185,7 @@ void Shader::set_uniform2f(const std::string& uniform_name, float v0, float v1) 
 void Shader::set_uniform2fv(const std::string& uniform_name, const float* v) {
 	int location = glGetUniformLocation(_shaderProg, uniform_name.c_str());
 	if (location >= 0) {
-		glUniform2fv(location, 2, v);
+		glUniform2fv(location, 1, v);
 	}
 }
 
@@ -206,14 +206,14 @@ void Shader::set_uniform3ui(const std::string& uniform_name, unsigned int v0, un
 void Shader::set_uniform3iv(const std::string& uniform_name, const int* v) {
 	int location = glGetUniformLocation(_shaderProg, uniform_name.c_str());
 	if (location >= 0) {
-		glUniform3iv(location, 3, v);
+		glUniform3iv(location, 1, v);
 	}
 }
 
 void Shader::set_uniform3uiv(const std::string& uniform_name, const unsigned int* v) {
 	int location = glGetUniformLocation(_shaderProg, uniform_name.c_str());
 	if (location >= 0) {
-		glUniform3uiv(location, 3, v);
+		glUniform3uiv(location, 1, v);
 	}
 }
 
@@ -227,7 +227,7 @@ void Shader::set_uniform3f(const std::string& uniform_name, float v0, float v1, 
 void Shader::set_uniform3fv(const std::string& uniform_name, const float* v) {
 	int location = glGetUniformLocation(_shaderProg, uniform_name.c_str());
 	if (location >= 0) {
-		glUniform3fv(location, 3, v);
+		glUniform3fv(location, 1, v);
 	}
 }
 
@@ -248,14 +248,14 @@ void Shader::set_uniform4ui(const std::string& uniform_name, unsigned int v0, un
 void Shader::set_uniform4iv(const std::string& uniform_name, const int* v) {
 	int location = glGetUniformLocation(_shaderProg, uniform_name.c_str());
 	if (location >= 0) {
-		glUniform4iv(location, 4, v);
+		glUniform4iv(location, 1, v);
 	}
 }
 
 void Shader::set_uniform4uiv(const std::string& uniform_name, const unsigned int* v) {
 	int location = glGetUniformLocation(_shaderProg, uniform_name.c_str());
 	if (location >= 0) {
-		glUniform4uiv(location, 4, v);
+		glUniform4uiv(location, 1, v);
 	}
 }
 
@@ -269,7 +269,7 @@ void Shader::set_uniform4f(const std::string& uniform_name, float v0, float v1, 
 void Shader::set_uniform4fv(const std::string& uniform_name, const float* v) {
 	int location = glGetUniformLocation(_shaderProg, uniform_name.c_str());
 	if (location >= 0) {
-		glUniform4fv(location, 4, v);
+		glUniform4fv(location, 1, v);
 	}
 }
 

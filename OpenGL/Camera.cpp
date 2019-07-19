@@ -33,6 +33,10 @@ glm::mat4 Camera::get_view_matrix() const {
 	return glm::lookAt(_position, _position + _front, _up);
 }
 
+glm::vec3 Camera::position() const {
+	return _position;
+}
+
 void Camera::set_max_zoom(float max_zoom) {
 	_max_zoom = max_zoom;
 }
