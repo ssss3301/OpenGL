@@ -147,8 +147,6 @@ void FreeMoveCamera::on_mouse_moved(double xpos, double ypos) {
 	front.z = sin(glm::radians(_yaw)) * cos(glm::radians(_pitch));
 	direction = glm::normalize(front);
 
-	std::cout << _pitch << std::endl;
-
 	_lastx = xpos;
 	_lasty = ypos;
 

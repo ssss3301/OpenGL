@@ -6,6 +6,8 @@
 #include "AroundCamera.h"
 #include "FreeMoveCamera.h"
 #include "Event.h"
+#include "Light.h"
+#include "material.h"
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
 	Event evt;
@@ -33,7 +35,7 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
 
 int main(int argc, char** argv) {
 	std::string title = "LearnOpenGL";
-	GLApplication* app = new FreeMoveCamera();
+	GLApplication* app = new Material();
 	if (app->init(800, 600, title, nullptr, nullptr)) {
 		app->set_framebuffer_size_callback(frame_size_change_callback);
 		app->set_mouse_callback(mouse_callback);
