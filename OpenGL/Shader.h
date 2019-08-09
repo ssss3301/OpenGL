@@ -48,7 +48,7 @@ public:
 private:
 	std::string get_file_content(const std::string file);
 
-private:
+public:
 	unsigned  int _shaderProg;
 	unsigned int _vert_shader;
 	unsigned int _frag_shader;
