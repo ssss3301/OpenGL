@@ -40,7 +40,7 @@ struct Material{
 
 uniform DirectionLight dir_light;
 #define DOTLIGHTCOUNT 4
-uniform DotLight dot_light[DOTLIGHTCOUNT];
+uniform PointLight point_light[DOTLIGHTCOUNT];
 uniform SpotLight spot_light;
 uniform Material mat;
 uniform vec3 viewPos;
@@ -101,5 +101,10 @@ vec3 CalcSpotLight(SpotLight spotlight, vec3 normal, vec3 viewpos, vec3 fragpos)
 
 void main()
 {
-    
+    vec3 color = CalcDirectionLight(dir_light, fNormal, viewPos, fragPos);
+    for(int i=0; i<DOTLIGHTCOUNT; ++i){
+        color += CalcPointLight(point_light[i], fNormal, viewPos, fragPos);
+    }
+    color += CalcSpotLight(spot_light, fNormal, viewpos, fragPos);
+    fragColor = vec4(color, 1.0f);
 }

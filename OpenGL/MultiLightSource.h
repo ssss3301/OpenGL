@@ -20,7 +20,8 @@ private:
 	Shader _shaderProg;
 	unsigned int _vao;
 	unsigned int _vbo;
-	unsigned int _tex;
+	unsigned int _diffuseTex;
+	unsigned int _specularTex;
 };
 
 #endif //__MultiLightSource_H__
